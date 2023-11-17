@@ -1,5 +1,30 @@
-var script;
+var fileUpload = document.querySelector('#upload-script');
+let script;
 var savefile;
+
+fileUpload.addEventListener("change", () => {
+    let scriptFile = fileUpload.files;
+    if (scriptFile.length == 0) return;
+    
+    const file = scriptFile[0];
+ 
+    let reader = new FileReader();
+ 
+    reader.onload = (e) => {
+        const file = e.target.result;
+ 
+        // This is a regular expression to identify carriage 
+        // Returns and line breaks
+        const lines = file.split(/\r\n|\n/);
+        script = lines.join('\n');
+ 
+    };
+ 
+    reader.onerror = (e) => alert(e.target.error.name);
+ 
+    reader.readAsText(file);
+
+}); // fileUpload event listener
 
 function Script(docType, name) {
     this.name = name;
@@ -56,10 +81,6 @@ function saveScript() {
     var savefile = JSON.stringify(script);
     download("Line_Buddy" + script.name + ".js", savefile);
 } // saveScript
-
-function loadScript() {
-
-} // loadScript
 
 function download(filename, text) {
     var element = document.createElement('a');
